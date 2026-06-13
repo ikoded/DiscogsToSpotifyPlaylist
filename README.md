@@ -4,8 +4,8 @@
 
 > [!IMPORTANT]
 >
-> This is a fork of the [scraper-api-to-billboard-spotify](https://github.com/Tsaousidis/scraper-api-billboard-to-spotify) repo. This repo has not been updated and Billboard 100 main website now requires pro membership to read. I am now using a new website hosted on a Japanese domain [here](https://elpee.jp/hot100/year_end/)
-> that is able to be scraped just the same.
+> This is a fork of the [scraper-api-to-billboard-spotify](https://github.com/Tsaousidis/scraper-api-billboard-to-spotify) repo. That  repo has not been updated and the Billboard's main website now requires pro membership to read certain charts.
+> I am now using a new website hosted on a Japanese domain [here](https://elpee.jp/hot100/year_end/) that is able to be scraped just the same.
 
 ## Requirements
 
@@ -25,5 +25,5 @@ Deciding on adding multithreaded implementation to improve performance (sorry I 
 ## Original Author
 - [@Tsaousidis Konstantinos](https://github.com/Tsaousidis)
 
-## Update Author
+## Refactor Author
 - [@Koder](https://github.com/ikoded)
