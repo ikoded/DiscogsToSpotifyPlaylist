@@ -1,0 +1,29 @@
+# Billboard 100 to Spotify Playlist
+
+Α Python automation project that scrapes the Billboard Hot 100 chart for a user-specified year and creates a private Spotify playlist with the top 100 songs of that year end (overlap does indeed occur sometimes between years, that is normal). Plans of implementing different playlists you can scrape from this website, please view [Future Development](#future-development).
+
+> [!IMPORTANT]
+>
+> This is a fork of the [scraper-api-to-billboard-spotify](https://github.com/Tsaousidis/scraper-api-billboard-to-spotify) repo. This repo has not been updated and Billboard 100 main website now requires pro membership to read. I am now using a new website hosted on a Japanese domain [here](https://elpee.jp/hot100/year_end/)
+> that is able to be scraped just the same.
+
+## Requirements
+
+Will most likely need to run `python -m pip install -r requirements.txt` to get required packages to run locally. To run locally simply type `python3 ./main.py` after ensuring you have your `CLIENT_ID`, `CLIENT_SECRET`, and `REDIRECT_URI` in env and referring to env section below for all options.
+
+You can use an .env (see EXAMPLE.env at root that you take EXAMPLE off to get working) for all env or set the system level env's like on Windows. Here are the env's you can set in file new line separated with defaults (if applicable):
+- DEBUG : False (set output of finding songs or not, noisy)
+- DRY_RUN : False (set dry run to not create playlist)
+- CLIENT_ID
+- CLIENT_SECRET
+- REDIRECT_URI
+
+## Future Development
+
+Deciding on adding multithreaded implementation to improve performance (sorry I am a C++ loser).  Another good idea is using the new website and pullng other data it has to create other playlists. Could have options on what you want like top 200, global, etc.
+
+## Original Author
+- [@Tsaousidis Konstantinos](https://github.com/Tsaousidis)
+
+## Update Author
+- [@Koder](https://github.com/ikoded)
