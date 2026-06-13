@@ -5,7 +5,7 @@
 > [!IMPORTANT]
 >
 > This is a fork of the [scraper-api-to-billboard-spotify](https://github.com/Tsaousidis/scraper-api-billboard-to-spotify) repo. That  repo has not been updated and the Billboard's main website now requires pro membership to read certain charts.
-> I am now using a new website hosted on a Japanese domain [here](https://elpee.jp/hot100/year_end/) that is able to be scraped just the same.
+> I am now using a new website hosted on a Japanese domain [here](https://elpee.jp/hot100/) that is able to be scraped just the same.
 
 ## Requirements
 
