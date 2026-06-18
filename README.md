@@ -24,7 +24,9 @@ You can use an .env (see EXAMPLE.env at root that you take EXAMPLE off to get wo
 
 ## Future Development
 
-Deciding on adding multithreaded implementation to improve performance (sorry I am a C++ loser).  Another good idea is using the new website and pullng other data it has to create other playlists. Could have options on what you want like top 200, global, etc.
+~~Deciding on adding multithreaded implementation to improve performance (sorry I am a C++ loser).  Another good idea is using the new website and pullng other data it has to create other playlists. Could have options on what you want like top 200, global, etc.~~
+
+Current plans have been halted as the owner of the website I use has blocked my IP and while I could circumvent it, I do not care to. So this will work still just be careful not to use it a ton in short succession like I did while development.
 
 ## Original Author
 - [@Tsaousidis Konstantinos](https://github.com/Tsaousidis)
