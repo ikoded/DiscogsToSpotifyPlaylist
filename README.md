@@ -1,5 +1,9 @@
 # Billboard 100 to Spotify Playlist
 
+> [!IMPORTANT]
+>
+> Well that was short lived, seems like the owner of elpee blocked me. While this will still work, be careful not to overuse it 😜
+
 Α Python automation project that scrapes the Billboard Hot 100 chart for a user-specified year and creates a private Spotify playlist with the top 100 songs of that year end (overlap does indeed occur sometimes between years, that is normal). Plans of implementing different playlists you can scrape from this website, please view [Future Development](#future-development).
 
 > [!IMPORTANT]
