@@ -1,6 +1,3 @@
-from ast import parse
-from ctypes import sizeof
-
 from bs4 import BeautifulSoup
 import requests
 import spotipy
