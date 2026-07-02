@@ -1,3 +1,6 @@
+from ast import parse
+from ctypes import sizeof
+
 from bs4 import BeautifulSoup
 import requests
 import spotipy
@@ -12,6 +15,9 @@ import time
 debug = False
 dryRun = False
 notfound=[]
+popularity={}
+listresponse={}
+PERPAGE=100
 
 def load_environment():
     global debug, dryRun
@@ -24,25 +30,52 @@ def load_environment():
     if(os.getenv("DRY_RUN") == "True"): 
         dryRun = True
 
-def get_billboard_top_100(date: str) -> dict[str,str]:
-    """Scrapes the Billboard Hot 100 songs for a specific date."""
-    url = f"https://elpee.jp/hot100/year_end/{date}" # new url
-    headers = {"User-Agent": "Mozilla/5.0"}
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
+# Per page defaults to 100
+# Search url defaults to `https://api.discogs.com/database/search`
+# Genres defaults to hip hop, electronic, pop and rock
+# Returns json response of results in pages
+def callCogs(year,page,per_page=PERPAGE,search_url="https://api.discogs.com/database/search", genres=["Hip-Hop","Pop"]):
+    CONSUMER_KEY=os.getenv("CONSUMER_KEY")
+    CONSUMER_SECRET=os.getenv("CONSUMER_SECRET")
+    params = {"format":"single","year": year, "per_page": per_page, "page": page, "genre" : genres, "country":"US"} 
+    headers = {"User-Agent": "DiscogsToSpotify/0.1 +https://github.com/ikoded/BillboardToSpotifyPlaylist","Authorization" : f"Discogs key={CONSUMER_KEY}, secret{CONSUMER_SECRET}"}
     
-    song_names = soup.find(name="div", id="playlist-data") # Grab HTML element that has JSON output
-    songlist = song_names.get('data-list') # Take the JSON data from the HTML element we pulled
-    jsonlist= json.loads(songlist) # Load json data into proper json variable
+    response = requests.get(search_url, headers=headers, params=params)
+    jsonresponse = json.loads(response.text)
+    return jsonresponse
 
-    apiQueries = dict()
+def parseResults(jsonresults):
+    for results in jsonresults["results"]:
+        title = results["title"]
+        splitlist = title.split("-")
+        artist = splitlist[0]
+        songname=""
 
-    for song in jsonlist:
-        title = song['title']
-        artist = song['artist']
-        apiQueries[title] = artist
+        for item in range(len(splitlist)):
+            if(item>0):
+                addTarget = splitlist[item] + " "
+                songname += addTarget.strip()
+        
+        listresponse[songname] = artist
+        popularity[songname] = results["community"]["have"]
 
-    return apiQueries # returned as {key1:value1,key2:value2,...}
+    if(dryRun): print(listresponse)
+
+def getCommunityHaveTop(playlist_size=100):
+    max=0
+    sortedmap=dict(sorted(popularity.items(), key=lambda item: item[1],reverse=True)) # sort popularity
+    cutdownmap=dict(list(sortedmap.items())[:playlist_size])
+
+    print(cutdownmap)
+    return cutdownmap
+
+def produceFinalSortedResult(sortedresult):
+    finallist={}
+    for item in listresponse:
+        if item in sortedresult:
+            finallist[item] = listresponse[item]
+
+    return finallist
 
 def authenticate_spotify() -> spotipy.Spotify:
     """Authenticates with Spotify and returns a Spotipy client."""
@@ -114,19 +147,41 @@ def metrics(song_names: dict[str,str], uris: list, timeelapsed: float):
 def main():
     start_time = time.perf_counter()
     load_environment()
-    date = input("Which year do you want to travel to? Type the date in this format YYYY: ")
-    songs = get_billboard_top_100(date)
+    pagenumberPrint=False
+
+    year = input("Which year do you want to travel to? Type the date in this format YYYY: ")
+    i = 1
+    # PERPAGE global is 100 for now
+    url="https://api.discogs.com/database/search"
+    while(i!=(PERPAGE+1)):
+        discogsresponse = callCogs(year,i,PERPAGE,url,["Hip-Hop","Pop"])
+        parseResults(discogsresponse)
+        if 'pages' in discogsresponse["pagination"] and not pagenumberPrint:
+            print("# of pages to go through: ")
+            print(discogsresponse["pagination"]["pages"])
+            pagenumberPrint = True
+
+        if 'next' in discogsresponse["pagination"]["urls"]:
+            url=discogsresponse["pagination"]["urls"]["next"]
+        else:
+            print("Exiting Discogs")
+            break # end of urls
+        i += 1
+        time.sleep(1.2) ## rate limit avoidance, 60 per minute so this is 60/1.2=50 requests per minute
+
+    sortedResults=produceFinalSortedResult(getCommunityHaveTop(100)) # 100 playlist size max
+    
     sp = authenticate_spotify()
     user_id = sp.current_user()["id"]
-    uris = search_spotify_uris(sp, songs)
+    uris = search_spotify_uris(sp,sortedResults)
     if(dryRun): 
         print("Dry run set to `True`, would've created a playlist of these songs/uris:")
-        print(songs)
+        print(sortedResults)
         print(uris)
     else:
-        create_spotify_playlist(sp, user_id, date, uris)
+        create_spotify_playlist(sp, user_id, year, uris)
     end_time= time.perf_counter()
-    metrics(songs,uris,end_time-start_time)
+    metrics(sortedResults,uris,end_time-start_time)
 
 if __name__ == "__main__":
     main()
