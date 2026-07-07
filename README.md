@@ -3,7 +3,8 @@
 Α Python automation project that scrapes Discogs for tracks to make into a Spotify playlist.
 
 > [!IMPORTANT]
->
+> This project has been discontinued feel free to use whatever as needed. Working on Apple Music instead.
+> 
 > This is a fork of the [scraper-api-to-billboard-spotify](https://github.com/Tsaousidis/scraper-api-billboard-to-spotify) repo. That repo has not been updated for a while and Billboard's main website now requires pro membership to read certain charts. I also now use Discogs for grabbing tracks.
 
 ## Requirements
